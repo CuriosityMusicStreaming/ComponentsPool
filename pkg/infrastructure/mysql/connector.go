@@ -13,8 +13,7 @@ import (
 )
 
 const (
-	dbDriverName = "mysql"
-
+	dbDriverName            = "mysql"
 	maxReconnectWaitingTime = 15 * time.Second
 )
 
@@ -26,7 +25,7 @@ type DSN struct {
 }
 
 func (dsn *DSN) String() string {
-	return fmt.Sprintf("%s:%s@(%s)/%s?charset=utf8mb4", dsn.User, dsn.Password, dsn.Host, dsn.Database)
+	return fmt.Sprintf("%s:%s@(%s)/%s?charset=utf8mb4&parseTime=true", dsn.User, dsn.Password, dsn.Host, dsn.Database)
 }
 
 type Connector interface {
@@ -50,9 +49,7 @@ func (c *connector) MigrateUp(dsn DSN, migrationsProvider MigrationProvider) err
 		return errors.WithStack(err)
 	}
 
-	migrSource := migrate.HttpFileSystemMigrationSource{FileSystem: migrationsProvider.GetDir()}
-
-	_, err = migrate.Exec(db.DB, "mysql", migrSource, migrate.Up)
+	_, err = migrate.Exec(db.DB, dbDriverName, makeMigrationSource(migrationsProvider), migrate.Up)
 	if err != nil {
 		return errors.Wrap(err, "failed to migrate")
 	}
@@ -81,8 +78,6 @@ func openDb(dsn DSN, maxConnections int) (*sqlx.DB, error) {
 		return nil, errors.Wrapf(err, "failed to open database")
 	}
 
-	// Limit max connections count,
-	//  next goroutine will wait once reached limit.
 	db.SetMaxOpenConns(maxConnections)
 
 	err = backoff.Retry(func() error {
@@ -97,6 +92,10 @@ func openDb(dsn DSN, maxConnections int) (*sqlx.DB, error) {
 		return nil, errors.Wrapf(err, "failed to ping database")
 	}
 	return db, errors.WithStack(err)
+}
+
+func makeMigrationSource(migrationsProvider MigrationProvider) migrate.MigrationSource {
+	return migrate.HttpFileSystemMigrationSource{FileSystem: migrationsProvider.GetDir()}
 }
 
 func newExponentialBackOff() *backoff.ExponentialBackOff {
