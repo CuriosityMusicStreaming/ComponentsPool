@@ -1,0 +1,21 @@
+run:
+  deadline: 5m
+  issues-exit-code: 1
+
+linters:
+  enable-all: true
+  disable:
+    - gochecknoglobals
+    - lll
+    - unparam
+    - goconst
+
+linters-settings:
+  govet:
+    check-shadowing: true
+  goimports:
+    local-prefixes: componentspool
+  gocritic:
+    enabled-tags:
+      - experimental
+      - opinionated
