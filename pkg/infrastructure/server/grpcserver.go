@@ -1,8 +1,8 @@
 package server
 
 import (
+	log "github.com/CuriosityMusicStreaming/ComponentsPool/pkg/app/logger"
 	"github.com/pkg/errors"
-	logger "github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
 	"net"
 )
@@ -11,16 +11,18 @@ type GrpcServerConfig struct {
 	ServeAddress string
 }
 
-func NewGrpcServer(server *grpc.Server, config GrpcServerConfig) Server {
+func NewGrpcServer(server *grpc.Server, config GrpcServerConfig, logger log.Logger) Server {
 	return &grpcServer{
 		baseServer: server,
 		config:     config,
+		logger:     logger,
 	}
 }
 
 type grpcServer struct {
 	baseServer *grpc.Server
 	config     GrpcServerConfig
+	logger     log.Logger
 }
 
 func (g *grpcServer) Serve() error {
@@ -29,7 +31,7 @@ func (g *grpcServer) Serve() error {
 		return errors.Wrapf(grpcErr, "failed to listen port %s", g.config.ServeAddress)
 	}
 
-	logger.Info("GRPC Server started")
+	g.logger.Info("GRPC Server started")
 	grpcErr = g.baseServer.Serve(grpcListener)
 	return errors.Wrap(grpcErr, "failed to serve GRPC")
 }
