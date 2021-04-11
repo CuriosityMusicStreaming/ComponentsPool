@@ -1,6 +1,4 @@
 export APP_CMD_NAME = componentspool
-export APP_PROTO_FILES = \
-	api/contentservice/contentservice.proto
 export DOCKER_IMAGE_NAME = vadimmakerov/$(APP_CMD_NAME):master
 
 all: build check test
