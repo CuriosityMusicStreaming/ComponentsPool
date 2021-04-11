@@ -19,5 +19,9 @@ type config struct {
 	DatabaseHost     string `envconfig:"db_host" default:"componentspool-db"`
 	DatabaseName     string `envconfig:"db_name" default:"ContentService"`
 
+	AMQPHost     string `envconfig:"amqp_host"`
+	AMQPUser     string `envconfig:"amqp_user" default:"guest"`
+	AMQPPassword string `envconfig:"amqp_password" default:"guest"`
+
 	MaxDatabaseConnections int `envconfig:"max_connections" default:"10"`
 }
