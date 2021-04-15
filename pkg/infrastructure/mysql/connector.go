@@ -31,7 +31,8 @@ func (dsn *DSN) String() string {
 type Connector interface {
 	Open(dsn DSN, maxConnections int) error
 	MigrateUp(dsn DSN, migrationsProvider MigrationProvider) error
-	Client() *sqlx.DB
+	Client() Client
+	TransactionalClient() TransactionalClient
 	Close() error
 }
 
@@ -68,8 +69,12 @@ func (c *connector) Close() error {
 	return errors.Wrap(err, "failed to disconnect")
 }
 
-func (c *connector) Client() *sqlx.DB {
+func (c *connector) Client() Client {
 	return c.db
+}
+
+func (c *connector) TransactionalClient() TransactionalClient {
+	return &transactionalClient{c.db}
 }
 
 func openDb(dsn DSN, maxConnections int) (*sqlx.DB, error) {
