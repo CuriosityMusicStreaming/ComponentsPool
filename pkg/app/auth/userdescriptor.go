@@ -5,16 +5,8 @@ import (
 	"github.com/google/uuid"
 )
 
-type Role int
-
-const (
-	Listener Role = iota
-	Creator
-)
-
 type UserDescriptor struct {
 	UserID uuid.UUID
-	Role
 }
 
 type UserDescriptorSerializer interface {
@@ -32,7 +24,6 @@ type userDescriptorSerializer struct {
 func (serializer *userDescriptorSerializer) Serialize(descriptor UserDescriptor) (string, error) {
 	jsonDesc := jsonUserDescriptor{
 		UserID: descriptor.UserID,
-		Role:   descriptor.Role,
 	}
 	bytes, err := json.Marshal(jsonDesc)
 	if err != nil {
@@ -50,11 +41,9 @@ func (serializer *userDescriptorSerializer) Deserialize(value string) (UserDescr
 
 	return UserDescriptor{
 		UserID: jsonDesc.UserID,
-		Role:   jsonDesc.Role,
 	}, err
 }
 
 type jsonUserDescriptor struct {
 	UserID uuid.UUID `json:"user_id"`
-	Role   `json:"role"`
 }
