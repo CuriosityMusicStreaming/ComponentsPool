@@ -1,13 +1,13 @@
-##ComponentsPool
+## ComponentsPool
 
-Репозиторий для хранения общих модулей для go-микросервисов
+Repo for common components of go-microservices 
 
-#### Сборка
+#### Build
 
-Выполнить make
+Run make
 
 ```shell
 make
 ```
 
-Команда соберёт все зависимости и собранный бинарный файл положит в `bin/`
+Command will run golangci-lint and tests
