@@ -38,7 +38,7 @@ func (l *Lock) Lock() error {
 }
 
 func (l *Lock) Unlock() error {
-	const sqlQuery = `SELECT RELEASE_LOCK(SUBSTRING(CONCAT(?, '.', DATABASE()), 1, 64), ?)`
+	const sqlQuery = `SELECT RELEASE_LOCK(SUBSTRING(CONCAT(?, '.', DATABASE()), 1, 64))`
 	var result sql.NullInt32
 	err := l.client.Get(&result, sqlQuery, l.lockName)
 	if err == nil {
