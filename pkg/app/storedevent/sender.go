@@ -16,7 +16,7 @@ type Sender interface {
 
 type EventsDispatchTracker interface {
 	TrackLastID(transportName string, id ID) error
-	LastId(transportName string) (*ID, error)
+	LastID(transportName string) (*ID, error)
 	Lock() error
 	Unlock() error
 }
@@ -98,7 +98,7 @@ func (sender *storedEventSender) dispatchEvents(dispatchRequests int32) (err err
 		}
 	}()
 
-	lastID, err := sender.tracker.LastId(sender.transport.Name())
+	lastID, err := sender.tracker.LastID(sender.transport.Name())
 	if err != nil {
 		return err
 	}
