@@ -1,10 +1,11 @@
 package server
 
 import (
+	"net"
+
 	log "github.com/CuriosityMusicStreaming/ComponentsPool/pkg/app/logger"
 	"github.com/pkg/errors"
 	"google.golang.org/grpc"
-	"net"
 )
 
 type GrpcServerConfig struct {

@@ -10,10 +10,10 @@ type StoredEvent struct {
 	Body string
 }
 
-func NewStoredEvent(Type string, body string) StoredEvent {
+func NewStoredEvent(eventType, body string) StoredEvent {
 	return StoredEvent{
 		ID:   ID(uuid.New()),
-		Type: Type,
+		Type: eventType,
 		Body: body,
 	}
 }

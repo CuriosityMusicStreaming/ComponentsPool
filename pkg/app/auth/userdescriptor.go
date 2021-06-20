@@ -2,6 +2,7 @@ package auth
 
 import (
 	"encoding/json"
+
 	"github.com/google/uuid"
 )
 
@@ -22,9 +23,8 @@ type userDescriptorSerializer struct {
 }
 
 func (serializer *userDescriptorSerializer) Serialize(descriptor UserDescriptor) (string, error) {
-	jsonDesc := jsonUserDescriptor{
-		UserID: descriptor.UserID,
-	}
+	jsonDesc := jsonUserDescriptor(descriptor)
+
 	bytes, err := json.Marshal(jsonDesc)
 	if err != nil {
 		return "", err
@@ -39,9 +39,7 @@ func (serializer *userDescriptorSerializer) Deserialize(value string) (UserDescr
 		return UserDescriptor{}, err
 	}
 
-	return UserDescriptor{
-		UserID: jsonDesc.UserID,
-	}, err
+	return UserDescriptor(jsonDesc), err
 }
 
 type jsonUserDescriptor struct {

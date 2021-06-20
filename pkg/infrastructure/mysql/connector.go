@@ -1,3 +1,4 @@
+//nolint
 package mysql
 
 import (
@@ -45,7 +46,7 @@ func NewConnector() Connector {
 }
 
 func (c *connector) MigrateUp(dsn DSN, migrationsProvider MigrationProvider) error {
-	db, err := openDb(dsn, 1)
+	db, err := openDB(dsn, 1)
 	if err != nil {
 		return errors.WithStack(err)
 	}
@@ -60,7 +61,7 @@ func (c *connector) MigrateUp(dsn DSN, migrationsProvider MigrationProvider) err
 
 func (c *connector) Open(dsn DSN, maxConnections int) error {
 	var err error
-	c.db, err = openDb(dsn, maxConnections)
+	c.db, err = openDB(dsn, maxConnections)
 	return errors.WithStack(err)
 }
 
@@ -77,7 +78,7 @@ func (c *connector) TransactionalClient() TransactionalClient {
 	return &transactionalClient{c.db}
 }
 
-func openDb(dsn DSN, maxConnections int) (*sqlx.DB, error) {
+func openDB(dsn DSN, maxConnections int) (*sqlx.DB, error) {
 	db, err := sqlx.Open(dbDriverName, dsn.String())
 	if err != nil {
 		return nil, errors.Wrapf(err, "failed to open database")

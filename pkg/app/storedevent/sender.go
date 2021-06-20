@@ -1,10 +1,11 @@
 package storedevent
 
 import (
-	"github.com/pkg/errors"
 	"sync"
 	"sync/atomic"
 	"time"
+
+	"github.com/pkg/errors"
 )
 
 type ErrorHandler func(err error)
@@ -37,13 +38,13 @@ func NewStoredEventSender(eventStore Store, tracker EventsDispatchTracker, trans
 }
 
 type storedEventSender struct {
+	dispatchRequests int32
 	wg               sync.WaitGroup
 	eventStore       Store
 	tracker          EventsDispatchTracker
 	transport        Transport
 	errorHandler     ErrorHandler
 	stopChan         chan struct{}
-	dispatchRequests int32
 }
 
 func (sender *storedEventSender) Increment() {

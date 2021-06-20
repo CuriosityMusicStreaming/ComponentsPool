@@ -3,10 +3,11 @@ package amqp
 import (
 	stderrors "errors"
 	"fmt"
+	"time"
+
 	"github.com/cenkalti/backoff"
 	"github.com/pkg/errors"
 	"github.com/streadway/amqp"
-	"time"
 )
 
 type Config struct {

@@ -14,7 +14,7 @@ type Event interface {
 type EventHandler func(event Event)
 
 type Subscription struct {
-	eventId  EventID
+	eventID  EventID
 	id       uint64
 	priority int
 }
@@ -43,7 +43,7 @@ type subscriptionsInfoList []*subscriptionInfo
 
 type bus struct {
 	lock        sync.Mutex
-	nextId      uint64
+	nextID      uint64
 	subscribers map[EventID]subscriptionsInfoList
 }
 
@@ -57,8 +57,8 @@ func (b *bus) Subscribe(eventID EventID, priority int, handler EventHandler) Sub
 	b.lock.Lock()
 	defer b.lock.Unlock()
 
-	id := b.nextId
-	b.nextId++
+	id := b.nextID
+	b.nextID++
 
 	b.subscribers[eventID] = append(b.subscribers[eventID], &subscriptionInfo{
 		id:       id,
@@ -67,7 +67,7 @@ func (b *bus) Subscribe(eventID EventID, priority int, handler EventHandler) Sub
 	})
 
 	return Subscription{
-		eventId:  eventID,
+		eventID:  eventID,
 		id:       id,
 		priority: priority,
 	}
@@ -77,7 +77,7 @@ func (b *bus) Unsubscribe(subscription Subscription) {
 	b.lock.Lock()
 	defer b.lock.Unlock()
 
-	if subscribers, ok := b.subscribers[subscription.eventId]; ok {
+	if subscribers, ok := b.subscribers[subscription.eventID]; ok {
 		for id, info := range subscribers {
 			if info.id == subscription.id {
 				subscribers = append(subscribers[:id], subscribers[id+1:]...)
@@ -85,9 +85,9 @@ func (b *bus) Unsubscribe(subscription Subscription) {
 			}
 		}
 		if len(subscribers) == 0 {
-			delete(b.subscribers, subscription.eventId)
+			delete(b.subscribers, subscription.eventID)
 		} else {
-			b.subscribers[subscription.eventId] = subscribers
+			b.subscribers[subscription.eventID] = subscribers
 		}
 	}
 }

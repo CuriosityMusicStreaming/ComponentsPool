@@ -1,9 +1,10 @@
 package logger
 
 import (
+	"time"
+
 	log "github.com/CuriosityMusicStreaming/ComponentsPool/pkg/app/logger"
 	"github.com/sirupsen/logrus"
-	"time"
 )
 
 const appNameKey = "app_name"
